@@ -44,5 +44,18 @@ app.post('/upload', upload.single('photo'), (req, res) => {
   res.status(200).send('檔案已上傳');
 });
 
+app.delete('/delete/:fileName', (req, res) => {
+    const fileName = req.params.fileName;
+    // 实现删除文件的逻辑，例如使用 fs.unlink
+    fs.unlink(path.join(uploadDirectory, fileName), (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error deleting file');
+      } else {
+        res.status(200).send('File deleted');
+      }
+    });
+  });
+  
 app.listen(3000, () => console.log('伺服器運行在 http://localhost:3000'));
 

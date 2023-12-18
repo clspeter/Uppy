@@ -26,10 +26,11 @@ const uppyDashboard = new Uppy({ logger: debugLogger })
     target: "#app",
     showProgressDetails: true,
     proudlyDisplayPoweredByUppy: true,
+    hideCancelButton: true,
   })
   .use(ImageEditor, { target: Dashboard }) //相片編輯
   .use(Compressor, { maxWidth: 4096, maxHeight: 4096, convertSize: 2000000 }); //相片壓縮
-  //載入相片
+//載入相片
 
 switch (UPLOADER) {
   case "tus":
@@ -63,32 +64,38 @@ loadUploadedFiles(uppyDashboard);
 window.uppy = uppyDashboard;
 
 function loadUploadedFiles(uppy) {
-  fetch('http://localhost:3000/files') // 替換為您的 API 端點
+  fetch('http://localhost:3000/files')
     .then(response => response.json())
-    .then(fileObject => {
-      console.log(fileObject)
-      fileObject.forEach(file => {
-        uppy.addFile({
-            name: file.name, // 從 URL 中提取檔案名稱
-            type: 'image/jpeg', // 例如 'image/jpeg'
-            data: Blob,
-            source: 'server',
-            isRemote: true, // 檔案儲存在伺服器上
-            remote: {
-                url : file.url, 
-                body: { 
-                }
-            },
-            uploadComplete: true,
-            uploadStarted: true,
+    .then(fileObjects => {
+      const filePromises = fileObjects.map(file => {
+        return fetch(`http://localhost:3000/download/${file.name}`)
+          .then(response => response.blob())
+          .then(blob => {
+            uppy.addFile({
+              source: 'server',
+              name: file.name,
+              type: 'image/jpeg', // 要根據文件的實際類型設置
+              data: blob,
+              meta:{
+
+              }
+            });
+          });
+      });
+
+      // 等待所有文件都添加到 Uppy
+      Promise.all(filePromises).then(() => {
+        uppy.getFiles().forEach(file => {
+          uppy.setFileState(file.id, {
+            progress: {},
+          });
         });
-        console.log(file.url);
-    });
+      });
     })
     .catch(error => console.error('Error loading files:', error));
 }
 
-uppyDashboard.on("complete", (result) => {
+uppyDashboard.on("complete",(result) => {
   if (result.failed.length === 0) {
     console.log("Upload successful");
   } else {
@@ -96,5 +103,16 @@ uppyDashboard.on("complete", (result) => {
   }
   console.log("successful files:", result.successful);
   console.log("failed files:", result.failed);
-  loadUploadedFiles()
+  //restart uppy
+});
+
+uppyDashboard.on("file-removed", (file) => {
+  fetch(`http://localhost:3000/delete/${file.name}`, { method: "DELETE" })
+    .then((response) => response.text())
+    .then((responseText) => {
+      console.log(responseText);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 });
