@@ -12,8 +12,8 @@
     "@uppy/aws-s3": "3.4.0",
     "@uppy/aws-s3-multipart": "3.8.0",
     "@uppy/compressor": "1.0.5",
-    "@uppy/core": "3.6.0",
-    "@uppy/dashboard": "3.6.0",
+    "@uppy/core": "^3.8.0",
+    "@uppy/dashboard": "^3.7.1",
     "@uppy/drop-target": "2.0.2",
     "@uppy/golden-retriever": "3.1.1",
     "@uppy/image-editor": "2.1.2",
@@ -22,7 +22,12 @@
     "@uppy/tus": "3.3.2",
     "@uppy/webcam": "3.3.4",
     "@uppy/xhr-upload": "3.4.2",
-    "parcel-bundler": "1.12.5"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "p-queue": "7.4.1",
+    "parcel-bundler": "1.12.5",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",
