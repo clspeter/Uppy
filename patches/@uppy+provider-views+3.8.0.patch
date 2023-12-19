@@ -1,0 +1,13 @@
+diff --git a/node_modules/@uppy/provider-views/lib/ProviderView/ProviderView.js b/node_modules/@uppy/provider-views/lib/ProviderView/ProviderView.js
+index 3ef16e1..a2fb74a 100644
+--- a/node_modules/@uppy/provider-views/lib/ProviderView/ProviderView.js
++++ b/node_modules/@uppy/provider-views/lib/ProviderView/ProviderView.js
+@@ -2,7 +2,7 @@ function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototy
+ var id = 0;
+ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
+ import { h } from 'preact';
+-import PQueue from 'p-queue';
++import PQueue from 'p-queue/dist';
+ import { getSafeFileId } from '@uppy/utils/lib/generateFileID';
+ import AuthView from "./AuthView.js";
+ import Header from "./Header.js";

@@ -11,7 +11,8 @@ const storage = multer.diskStorage({
         cb(null, uploadDirectory);
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+      const filename = Buffer.from(file.originalname, 'latin1').toString('utf8');
+        cb(null, filename);
     }
 });
 
@@ -22,22 +23,35 @@ const uploadDirectory = path.join(__dirname, 'uploads');
 
 app.use('/download', express.static(uploadDirectory));
 
+
+const { v4: uuidv4 } = require('uuid');
+
 app.get('/files', (req, res) => {
     fs.readdir(uploadDirectory, (err, files) => {
         if (err) {
             res.status(500).send('無法讀取檔案');
         } else {
             const fileDetails = files.map(file => {
+                const filePath = path.join(uploadDirectory, file);
+                const stats = fs.statSync(filePath);
+                const fileSizeInBytes = stats.size;
+                const extensionName = path.extname(file);
+
                 return {
-                    name: file,
-                    url: `http://localhost:3000/download/${file}`
+                    Id: uuidv4(), // 使用 uuid 生成唯一 ID
+                    AttachmentId: uuidv4(), // 同上
+                    FileName: file,
+                    ExtensionName: extensionName,
+                    Path: filePath,
+                    Description: '', // 描述信息，如果有的話
+                    Size: fileSizeInBytes,
+                    Seq: null // 如果有序列號的話
                 };
             });
             res.json(fileDetails);
         }
     });
 });
-
 app.post('/upload', upload.single('photo'), (req, res) => {
     //儲存檔案
     console.log(req.file);
