@@ -52,7 +52,7 @@ app.get('/files', (req, res) => {
         }
     });
 });
-app.post('/upload', upload.single('photo'), (req, res) => {
+app.post('/upload', upload.single('attachment'), (req, res) => {
     //儲存檔案
     console.log(req.file);
   res.status(200).send('檔案已上傳');
