@@ -38,14 +38,14 @@ app.get('/files', (req, res) => {
                 const extensionName = path.extname(file);
 
                 return {
-                    Id: uuidv4(), // 使用 uuid 生成唯一 ID
-                    AttachmentId: uuidv4(), // 同上
+                    Id: uuidv4(),
+                    AttachmentId: uuidv4(),
                     FileName: file,
                     ExtensionName: extensionName,
                     Path: filePath,
-                    Description: '', // 描述信息，如果有的話
+                    Description: '',
                     Size: fileSizeInBytes,
-                    Seq: null // 如果有序列號的話
+                    Seq: null 
                 };
             });
             res.json(fileDetails);
@@ -60,7 +60,7 @@ app.post('/upload', upload.single('photo'), (req, res) => {
 
 app.delete('/delete/:fileName', (req, res) => {
     const fileName = req.params.fileName;
-    // 实现删除文件的逻辑，例如使用 fs.unlink
+ //刪除檔案
     fs.unlink(path.join(uploadDirectory, fileName), (err) => {
       if (err) {
         console.error(err);

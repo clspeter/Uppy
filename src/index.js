@@ -1,9 +1,6 @@
 import Uppy, { debugLogger } from "@uppy/core";
 import Dashboard from "@uppy/dashboard";
 import GoldenRetriever from "@uppy/golden-retriever";
-import Tus from "@uppy/tus";
-import AwsS3 from "@uppy/aws-s3";
-import AwsS3Multipart from "@uppy/aws-s3-multipart";
 import XHRUpload from "@uppy/xhr-upload";
 import ImageEditor from "@uppy/image-editor";
 import Compressor from "@uppy/compressor";
@@ -13,22 +10,19 @@ import "@uppy/core/dist/style.css";
 import "@uppy/dashboard/dist/style.css";
 import "@uppy/image-editor/dist/style.css";
 
-const UPLOADER = "xhr";
-const COMPANION_URL = "http://companion.uppy.io";
-const companionAllowedHosts = [];
-const TUS_ENDPOINT = "https://tusd.tusdemo.net/files/";
 const XHR_ENDPOINT = "http://localhost:3000/upload";
 
-const RESTORE = false;
+const RESTORE = false; //還原功能
 
 const uppyDashboard = new Uppy({
   logger: debugLogger, 
+  //上傳的檢查
   onBeforeUpload: (files) => {
     //檢查檔案數量
     const length = Object.keys(files).length;
     console.log(length)
     if (length > 4 ) {
-      uppyDashboard.info(`最多只能上傳4個檔案`, 'error', 2000);
+      uppyDashboard.info(`最多只能上傳5個檔案`, 'error', 2000);
       return false;
     }
     //檢查總檔案大小
@@ -37,13 +31,13 @@ const uppyDashboard = new Uppy({
       totalSize += files[file].size;
     });
     console.log(totalSize)
-    if (totalSize > 50000000) {
-      uppyDashboard.info(`總檔案大小不能超過50MB`, 'error', 2000);
+    if (totalSize > 20000000) {
+      uppyDashboard.info(`總檔案大小不能超過20MB`, 'error', 2000);
       return false;
     }
   }
-
 })
+//設定
   .use(Dashboard, {
     inline: true,
     target: "#app",
@@ -51,35 +45,16 @@ const uppyDashboard = new Uppy({
     proudlyDisplayPoweredByUppy: true,
     hideCancelButton: true,
     doneButtonHandler: null,
-    showRemoveButtonAfterComplete: true,
+    showRemoveButtonAfterComplete: true,//允許刪除上傳成功的照片
   })
   .use(ImageEditor, { target: Dashboard }) //相片編輯
   .use(Compressor, { quality: 0.8, convertSize: 5000000 }) //相片壓縮
-  .use(ThumbnailGenerator, { thumbnailHeight: 1000 });
-//載入相片
-
-switch (UPLOADER) {
-  case "tus":
-    uppyDashboard.use(Tus, { endpoint: TUS_ENDPOINT, limit: 6 });
-    break;
-  case "s3":
-    uppyDashboard.use(AwsS3, { companionUrl: COMPANION_URL, limit: 6 });
-    break;
-  case "s3-multipart":
-    uppyDashboard.use(AwsS3Multipart, {
-      companionUrl: COMPANION_URL,
-      limit: 6,
-    });
-    break;
-  case "xhr":
-    uppyDashboard.use(XHRUpload, {
+  .use(ThumbnailGenerator, { thumbnailHeight: 1000 }) //較大的縮圖，似乎沒有用
+  .use(XHRUpload, { //設定上傳方式
       endpoint: XHR_ENDPOINT,
       formData: true,
       fieldName: "photo",
     });
-    break;
-  default:
-}
 
 if (RESTORE) {
   uppyDashboard.use(GoldenRetriever, { serviceWorker: true });
@@ -89,6 +64,7 @@ loadUploadedFiles(uppyDashboard);
 
 window.uppy = uppyDashboard;
 
+//取得已上傳的檔案
 function loadUploadedFiles(uppy) {
   fetch('http://localhost:3000/files')
     .then(response => response.json())
@@ -112,7 +88,7 @@ function loadUploadedFiles(uppy) {
             uppy.addFile({
               source: 'server',
               name: file.FileName,
-              type, // 要根據文件的實際類型設置
+              type, 
               data: blob,
               meta: {
               }
@@ -120,7 +96,7 @@ function loadUploadedFiles(uppy) {
           });
       });
 
-      // 等待所有文件都添加到 Uppy
+      // 等待所有文件都添加到 Uppy 後，把文件設定成以上傳完成的狀態
       Promise.all(filePromises).then(() => {
         uppy.getFiles().forEach(file => {
           uppy.setFileState(file.id, {
@@ -135,17 +111,7 @@ function loadUploadedFiles(uppy) {
     .catch(error => console.error('Error loading files:', error));
 }
 
-uppyDashboard.on("complete", (result) => {
-  if (result.failed.length === 0) {
-    console.log("Upload successful");
-  } else {
-    console.warn("Upload failed");
-  }
-  console.log("successful files:", result.successful);
-  console.log("failed files:", result.failed);
-  //restart uppy
-});
-
+//刪除檔案
 uppyDashboard.on("file-removed", (file) => {
   fetch(`http://localhost:3000/delete/${file.name}`, { method: "DELETE" })
     .then((response) => response.text())
@@ -157,28 +123,7 @@ uppyDashboard.on("file-removed", (file) => {
     });
 });
 
-uppyDashboard.on('file-editor:complete', (updatedFile) => {
-  //meta新增isEdited屬性
-  uppyDashboard.setFileMeta(updatedFile.id, {
-    upload: true,
-  });
-});
-
-//上傳前檢查upload屬性，若為真則上傳否則不上傳
-uppyDashboard.on('before-upload', (file) => {
-  if (file.meta.upload) {
-    console.log('上傳檔案：', file.name)
-    return true;
-  } else {
-    console.log('不上傳檔案：', file.name)
-    return false;
-  }
-}
-);
-
-
-
-
+//點擊圖片顯示預覽，僅限已上傳的檔案
 document.addEventListener('DOMContentLoaded', function () {
   document.body.addEventListener('click', async function (event) {
     if (event.target.classList.contains('uppy-Dashboard-Item-previewImg')) {
