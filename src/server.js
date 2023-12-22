@@ -26,7 +26,7 @@ app.use('/download', express.static(uploadDirectory));
 
 const { v4: uuidv4 } = require('uuid');
 
-app.get('/files', (req, res) => {
+app.get('/filelist', (req, res) => {
     fs.readdir(uploadDirectory, (err, files) => {
         if (err) {
             res.status(500).send('無法讀取檔案');
