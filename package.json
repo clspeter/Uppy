@@ -6,7 +6,8 @@
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "bundle": "webpack"
   },
   "dependencies": {
     "@uppy/audio": "1.1.4",
