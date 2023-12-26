@@ -1,5 +1,5 @@
 'use strict';
-import Uppy, { debugLogger } from "@uppy/core";
+import Uppy from "@uppy/core";
 import Dashboard from "@uppy/dashboard";
 import GoldenRetriever from "@uppy/golden-retriever";
 import XHRUpload from "@uppy/xhr-upload";
@@ -226,3 +226,5 @@ class UppyUploader {
     });
   }
 }
+
+export { UppyUploader };
