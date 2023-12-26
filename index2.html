@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Parcel Sandbox</title>
+	<meta charset="UTF-8" />
+</head>
+
+<body>
+	<link href="https://releases.transloadit.com/uppy/v3.21.0/uppy.min.css" rel="stylesheet">
+	<div id="uppy"></div>
+	<script type="module">
+		import { Uppy, Dashboard } from "https://releases.transloadit.com/uppy/v3.21.0/uppy.min.mjs"
+		const uppy = new Uppy()
+			.use(Dashboard, {
+				inline: true,
+				target: "#uppy",
+				showProgressDetails: true,
+				proudlyDisplayPoweredByUppy: true,
+				hideCancelButton: true,
+				doneButtonHandler: null,
+				showRemoveButtonAfterComplete: true,//允許刪除上傳成功的照片
+			});
+	</script>
+</body>
+
+</html>

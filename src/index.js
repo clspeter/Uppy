@@ -20,12 +20,10 @@ class UppyUploader {
       download: `${this.endpoint}/download`,
     }
 
-    this.uppy = new Uppy({
-      logger: debugLogger,
-      onBeforeUpload: files => this.handleBeforeUpload(files)
-    })
+    this.uppy = new Uppy()
       .use(Dashboard, {
         inline: true,
+        modal: true,
         target: target,
         showProgressDetails: true,
         proudlyDisplayPoweredByUppy: true,
@@ -228,5 +226,3 @@ class UppyUploader {
     });
   }
 }
-
-const uppyUploader = new UppyUploader("http://localhost:3000", "#app", true);
