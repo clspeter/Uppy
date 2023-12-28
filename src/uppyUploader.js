@@ -5,6 +5,7 @@ import GoldenRetriever from "@uppy/golden-retriever";
 import XHRUpload from "@uppy/xhr-upload";
 import ImageEditor from "@uppy/image-editor";
 import Compressor from "@uppy/compressor";
+import Chinese from "@uppy/locales/lib/zh_TW";
 
 import "@uppy/core/dist/style.css";
 import "@uppy/dashboard/dist/style.css";
@@ -30,6 +31,7 @@ class UppyUploader {
         hideCancelButton: true,
         doneButtonHandler: null,
         showRemoveButtonAfterComplete: true,//允許刪除上傳成功的照片
+        locale: Chinese,
       });
 
     this.uppy
