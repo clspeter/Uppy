@@ -1,18 +1,7 @@
 'use strict';
-import Uppy from "@uppy/core";
-import Dashboard from "@uppy/dashboard";
-import GoldenRetriever from "@uppy/golden-retriever";
-import XHRUpload from "@uppy/xhr-upload";
-import ImageEditor from "@uppy/image-editor";
-import Compressor from "@uppy/compressor";
-import Chinese from "@uppy/locales/lib/zh_TW";
-
-import "@uppy/core/dist/style.css";
-import "@uppy/dashboard/dist/style.css";
-import "@uppy/image-editor/dist/style.css";
 
 class UppyUploader {
-  constructor(endpoint, target, useImageEditor = false, useRestore = false) {
+  constructor(endpoint, target, useImageEditor = false) {
     this.endpoint = endpoint;
     this.api = {
       upload: `${this.endpoint}/upload`,
@@ -21,33 +10,27 @@ class UppyUploader {
       download: `${this.endpoint}/download`,
     }
 
-    this.uppy = new Uppy()
-      .use(Dashboard, {
+    this.uppy = new Uppy.Uppy({ locale: Uppy.locales.zh_TW })
+      .use(Uppy.Dashboard, {
         inline: true,
-        modal: true,
         target: target,
         showProgressDetails: true,
-        proudlyDisplayPoweredByUppy: true,
+        proudlyDisplayPoweredByUppy: false,
         hideCancelButton: true,
         doneButtonHandler: null,
         showRemoveButtonAfterComplete: true,//允許刪除上傳成功的照片
-        locale: Chinese,
       });
 
     this.uppy
-      .use(Compressor, { quality: 0.8, convertSize: 5000000 })
-      .use(XHRUpload, {
+      .use(Uppy.Compressor, { quality: 0.8, convertSize: 5000000 })
+      .use(Uppy.XHRUpload, {
         endpoint: this.api.upload,
         formData: true,
         fieldName: "attachment",
       });
 
-    if (useRestore) {
-      this.uppy.use(GoldenRetriever, { serviceWorker: true });
-    }
-
     if (useImageEditor) {
-      this.uppy.use(ImageEditor, { target: Dashboard });
+      this.uppy.use(Uppy.ImageEditor, { target: Uppy.Dashboard });
     }
 
     this.loadUploadedFiles();
@@ -228,5 +211,3 @@ class UppyUploader {
     });
   }
 }
-
-export { UppyUploader };

@@ -2,17 +2,19 @@
 <html>
 
 <head>
-	<title>Uppy bundle to commonjs demo</title>
+	<link href="https://releases.transloadit.com/uppy/v3.21.0/uppy.min.css" rel="stylesheet">
+	<title>Uppy Demo</title>
 	<meta charset="UTF-8" />
 </head>
 
 <body>
-	<div id="app"></div>
-	<script src="dist/uppyUploader.bundle.js"></script>
+	<div id="uppy"></div>
+	<script src="https://releases.transloadit.com/uppy/v3.21.0/uppy.min.js"></script>
+	<script src="https://releases.transloadit.com/uppy/locales/v3.3.1/zh_TW.min.js"></script>
+	<script src="src/uppyUploader.js"></script>
 	<script>
-		const uploader = new UppyUploader.UppyUploader("http://localhost:3000", "#app", true);
+		const uppyDashboard = new UppyUploader("http://localhost:3000", "#uppy", true);
 	</script>
-
 </body>
 
 </html>
