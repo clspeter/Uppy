@@ -1,0 +1,118 @@
+@charset "UTF-8";
+
+.uppy-Informer {
+  z-index: 85;
+}
+
+.uppy-Informer-animated {
+  z-index: -1000;
+}
+
+.uppy-StatusBar {
+  z-index: 81;
+}
+
+.uppy-StatusBar-progress {
+  z-index: 81;
+}
+
+.uppy-StatusBar-content {
+  z-index: 82;
+}
+
+.uppy-StatusBar-actions {
+  z-index: 84;
+}
+
+.uppy-ProviderBrowser-viewType--grid .uppy-ProviderBrowserItem-checkbox,
+.uppy-ProviderBrowser-viewType--unsplash .uppy-ProviderBrowserItem-checkbox {
+  z-index: 82;
+}
+
+.uppy-ProviderBrowser-header {
+  z-index: 81;
+}
+
+.uppy-ProviderBrowser-headerBar {
+  z-index: 81;
+}
+
+.uppy-ProviderBrowser-searchFilterInput {
+  z-index: 81;
+}
+
+.uppy-ProviderBrowser-searchFilterIcon {
+  z-index: 82;
+}
+
+.uppy-ProviderBrowser-searchFilterReset {
+  z-index: 82;
+}
+
+.uppy-Dashboard-Item-previewInnerWrap::after {
+  z-index: 81;
+}
+
+.uppy-Dashboard-Item-previewLink {
+  z-index: 82;
+}
+
+.uppy-Dashboard-Item-progress {
+  z-index: 82;
+}
+
+.uppy-size--md .uppy-Dashboard-Item-action--remove {
+  z-index: 82;
+}
+
+.uppy-Dashboard-Item.is-ghost .uppy-Dashboard-Item-preview::before {
+  z-index: 85;
+}
+
+.uppy-Dashboard-FileCard {
+  z-index: 85;
+}
+
+.uppy-Dashboard--modal {
+  z-index: 81;
+}
+
+.uppy-Dashboard--modal .uppy-Dashboard-overlay {
+  z-index: 81;
+}
+
+.uppy-Dashboard--modal .uppy-Dashboard-inner {
+  z-index: 82;
+}
+
+.uppy-Dashboard-close {
+  z-index: 85;
+}
+
+.uppy-Dashboard-serviceMsg {
+  z-index: 84;
+}
+
+.uppy-DashboardContent-bar {
+  z-index: 84;
+}
+
+.uppy-DashboardContent-panel {
+  z-index: 85;
+}
+
+.uppy-Dashboard-AddFilesPanel {
+  z-index: 85;
+}
+
+.uppy-Dashboard-progressBarContainer.is-active {
+  z-index: 84;
+}
+
+.uppy-Dashboard-dropFilesHereHint {
+  z-index: 2000;
+}
+
+.uppy-Dashboard-Item-previewIcon {
+  z-index: 85;
+}
